@@ -7,8 +7,9 @@ function App() {
 
   const addTodo = event => {
     event.preventDefault();
-    const newTodo = event.target.elements.todo.value;
-    if (newTodo) {
+    const newTodoText = event.target.elements.todo.value;
+    if (newTodoText) {
+      const newTodo = {text: newTodoText, isCompleted: false}
       setTodos(prevTodos => [...prevTodos, newTodo]);
       event.target.reset();
     }
@@ -16,6 +17,12 @@ function App() {
     
   const deleteTodo = index => {
     setTodos(prevTodos => prevTodos.filter((_, i) => i !== index))
+  };
+
+  const toggleTodoCompletion = index => {
+    setTodos(previousTodos => previousTodos.map((todo, i) => 
+      i === index ? {...todo, isCompleted: !todo.isCompleted} : todo
+   ))
   };
 
   return (
@@ -28,7 +35,12 @@ function App() {
       <ul>
         {todos.map((todo, index) => (
           <li key={index}>
-            {todo}
+            <input 
+              type="checkbox"
+              checked={todo.isCompleted}
+              onChange={() => toggleTodoCompletion(index)}
+            />
+            {todo.text}
             <button onClick={() => deleteTodo(index)}>Delete</button>
           </li>
         ))}
